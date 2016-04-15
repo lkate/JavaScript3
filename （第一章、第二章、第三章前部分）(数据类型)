@@ -1,0 +1,83 @@
+第一章   JavaScript简介
+        一个JavaScript应有三部分组成：1.核心（ECMAScript）  2.文档对象模型（DOM） 3.浏览器对象模型（BOM）.
+             1.ECMA-262标准规定语言的：语法、类型、语句、关键字、保留字、操作符、对象。ECMAScript就是对该标准规定的各个方面的语言描述，提供核心语言功能。
+             2.文档对象模型（DOM），提供访问和操作网页内容的方法和接口。
+             3.浏览器对象模型（BOM），提供与浏览器交互的方法和接口。
+
+第二章    在HTML中使用JavaScript
+       1.<script>元素的属性：
+             (1) async 应立即下载脚本，但不应妨碍页面中的其他操作。
+             (2) defer  表示脚本可在文档被解析和显示之后再执行。
+             (3) src 引入要执行的外部文件。
+             (4) type 编写代码使用的脚本语言，如未指定，默认值是text/javascript。
+
+       2.标签的位置
+               (1) 一般都把全部 JavaScript 引用放在<body>元素中页面内容的后面，
+               (2) 或者放在<head>元素里使用defer属性延迟执行，但最好只包含一个延迟脚本。
+               (3) 异步脚本，async属性，异步加载页面其他内容，异步脚本之间不能互相依赖，建议不要在加载期间操作DOM。
+
+第三章    基本概念
+        1.语法：
+                (1) 区分大小写,
+                (2) 标识符(变量，函数，属性的名字)命名规则：第一个字符必须是字母或下划线或$,其他字符可以是字母、下划线、$和数字。标识符采用驼峰命名法：firstSecond.
+                (3) 注释方法： // 单行注释   多行注释，
+                (4) 语句结尾使用分号，条件语句使用代码块{ }。
+
+       2.关键字和保留字
+                (1) 关键字：具有特定用途。 break   case   catch   continue   debugger   default   delete   do   else   finally   for   function   if   in   instanceof   new   return   switch   this   throw   try   typeof   var   void   while   with
+                (2) 保留字(第5版非严格模式下)：class const   enum   export   extends   import   super    
+         使用关键字或保留字作标识符会导致“Identifier Expected”错误。
+
+       3.变量：使用var 定义，js中的变量是松散类型。
+
+        4.数据类型：5种基本数据类型：Undefined 、Null、Number、String、Boolean；还有1种复杂数据类型：Object。
+                 (1) typeof操作符：检测变量的数据类型。 undefined:变量未定义   boolean:布尔值   string:字符串   number:数值    object:对象或null   function:函数
+                (2)Undefined类型:只有一个值：undefined。对未初始化的变量执行 typeof 操作符会返回 undefined 值，而对未声明的变量执行 typeof 操作符同样也会返回 undefined 值.因此对所有的变量进行初始化，当typeof的值为undefined时，可以确定变量未声明。
+                 (3)Null类型：也只有一个值null。从逻辑角度来看，null值表示一个空对象指针，因此用typeof检测时会返回object。当定义一个变量要保存对象时，将对象初始化为null，实际上，undefined是派生自null,ECMA-262规定对它们的相等性返回true.null == undefined的值永远是true。
+                (4)Bollean类型：ECMAScript中所有的值都有与true或false等价的值。要将一个值转化成其对应的Boolean值，可调用Boolean()转型函数。转换规则：String:空字符串会转为false  Number:0或NaN转成false   Object:null转成false   Undefined：转成false。
+                 (5)Number类型：
+                        默认数值为十进制，八进制字面值的第一位必须是零(0)，如果字面值中的数值超出八进制的范围，将忽略前面的0，按十进制处理。十六进制前两位必须是0x，超出范围会报错。
+                        NaN非数值，是一个特殊数值，用来表示一个本来要返回数值的操作未返回数值的情况（这样就不会抛出错误）。NaN有两个特点：任何涉及NaN的操作都会返回NaN，NaN与任何值都不相等，包括NaN本身。根据其特点，ECMAScript定义了isNaN()函数，用来检测变量是否“不是数字”。注：能被转换成数字的变量作参数会返回false。。例如：isNaN('a')返回true，意思是‘a'是“不是数字”，即’a'不是数字。 isNaN(123) 返回false,意思是123不是“不是数字”，即123是数字。
+                 数值转换 ：Number()  parseInt()  parseFloat()。第一个可用于任何数据类型，后两个用于字符串
+                            (1) Number() 函数的转换规则：
+                                  * 如果是 Boolean 值， true 和 false 将分别被转换为 1 和 0，
+                                  * 如果是数字值，只是简单的传入和返回，不变，
+                                  * 如果是 null 值，返回 0，
+                                  * 如果是undefined,返回NaN,
+                                  * 如果是字符串，遵循以下规则：
+                                        * 如果字符串中只包含数字（包括带正负号的情况），则将其转换为十进制数值，前面的0会被忽略，如‘-013’==》-13，
+                                        * 如果字符串含有有效的浮点格式，则将其转为对应的浮点数，前面的0被忽略，
+                                        * 如果字符串中包含有效的十六进制格式，会转成相同大小的十进制数值，例如‘0xf’==>15，
+                                        * 如果字符串是空的，则转成0，
+                                        * 如果字符串包含除上述格式之外的字符，会转成NaN。即字符串有不是数字，正负号，小点的字符时Number()函数会返回NaN。
+                                即转换字符串时，字符如果有无效数值，将返回NaN，‘123a’，'1.2.2' 都会返回NaN。
+                                 * 如果是对象，则调用对象的 valueOf()方法，然后依照前面的规则转换返回的值。如果转换的结果是 NaN，则调用对象的 toString()方法，然后再次依照前面的规则转换返回的字符串值。
+
+                           (2)paresInt()函数：将字符串转换成整数，看是否符合数值模式
+                               转换规则：
+                               * 会忽略前面的空格，直至找到第一个非空字符，如果第一个非空字符不是数字字符或者正负号，则返回NaN，也就是说parseInt()会将空字符串转成NaN,与Number()不同。
+                               * 如果第一个字符是数值字符。则继续解析后续字符，知道解析完成或者遇到非数字字符停止。
+                               * 小数点也属于非数值字符，即不能转换为浮点类型。
+                               * 为了避免转换不同进制时的困惑，可以为parseInt()函数指定第二个参数：转换时使用的基数（即多少进制）。
+                               即parseiNT()转换字符串时，忽略前面的空格，第一个字符必须是数字或正负号加数字，并截止到非数字字符，返回中间的数字。‘123aa’返回123,‘a123’返回NaN。
+                           (3)paresFloat()函数：将字符串转换成浮点数
+                               转换规则：
+                               * 只识别第一个小数点，第二个小数点及后面的字符会被忽略。
+                               * 只识别十进制数，因此没有第二个参数。
+                               * 如果字符串包含的是一个可解析为整数的值，parseFloat()返回的会是一个整数。
+
+                (6)String类型：
+                          (1)字符串中的转义字符会被当成一个字符来解析。访问字符串的length属性可返回字符串的长度，返回的字符数包括16位字符的数目，如果字符串中包含双字节字符， 那么length属性可能不会返回精确的字符数目。
+                          (2)转换为字符串的方法：toString()   String() 
+                              toString()可以转换数值，布尔值，对象，字符串，但null和undefined没有这个方法。数值的toString()在转换时可以传递一个参数：输出数值的基数。
+                              String() 将null转成“null”，将undefined转成“undefined"。
+                              要把某个值转为字符串可以把它与空字符串“”相加。
+
+               (7)Object类型：  ECMAScript中的对象其实就是一组数据和操作的集合。
+                  通过new操作符后跟要创建的对象类型的名称来创建实例对象。Object是所有它的实例的基础，即它的实例具有所有Object的属性和方法。Object的每个实例都具有以下属性和方法：
+                     (1) constructor:保存着用于创建当前对象的函数。
+                     (2) hasOwnProperty(prepertyName):检查当前属性是否存在于实例中，其中的属性名必须以字符串形式指定。
+                     (3) isPretopertyOf(object):检查传入的对象是否是当前对象的原型。
+                     (4) toLocaleString():返回对象的字符串表示，该字符串与执行环境的地区相对应。
+                     (5) toString():返回对象的字符串表示。
+                     (6) valueOf():返回对象的字符串、数值、或布尔值表示。通常与toString()方法的返回值相同。
