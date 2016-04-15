@@ -1,0 +1,93 @@
+1.js原型（prototype）实现继承
+    原型（prototype）属性是js的一个独有的机制，可以理解为当js读取一个对象属性的时候，对象本身若找不到这属性时，则会去读取构造函数的prototype对象的同名属性，但若还是找不到，则会去读取Object构造函数的prototype对象的同名属性——即所谓的“继承”。
+    示例代码如下：
+    
+
+HTML 代码
+
+
+
+123456789101112131415161718192021
+function Person(name,age){
+this.name=name;
+this.age=age;
+}
+Person.prototype.say=function(){
+alert("Name:"+ths.name);
+}
+var person=new Person("tsingtam",24);
+person.say();//Name:tsingtam
+function Another(){}
+Another.prototype=new Person("Wangcc",22);//这里实现继承，Another继承Person的属性
+var another=new Another();
+Another.prototype.work="teacher";
+Another.prototype.info=function(){
+alert(this.work);
+}
+another.say();//Name:Wangcc
+another.info();//teacher
+
+
+以上代码是用原型方式实现的继承。
+2.构造函数实现继承（组合继承）
+先看代码
+HTML 代码
+
+
+
+12345678910111213141516171819202122232425
+function SuperTYpe(name){
+this.name=name;
+ths.colors=["red","black","white"];
+}
+SuperType.prototype.sayName=function(){alert(this.name);};
+function SubType(name,age){
+SuperType.call(this,name);//继承属性，  第二次调用SuperType()
+this.age=age;
+}
+SubType.prototype=new SuperType();//继承方法，   第一次调用SuperType()
+SubType.prototype.constructor=SubType;
+SubType.prototype.sayAge=function(){
+alert(this.age);
+}
+var obj1=new SubType("tsingtam"24);
+obj1.colors.push("green");
+alert(obj1.colors);//"red,black,white,black"
+obj1.sayName();//"tsingtam"
+obj1.sayAge();//24
+var obj2=new SubType("tanxin",25);
+alert(obj2.colors);// "red,black,white"
+obj2.sayName();//"tanxin"
+obj2.sayAge();//25
+
+
+以上代码中融入了原型和构造函数，避免了单一原型或构造函数的缺陷，融合了他们的优点。这是最常用的继承模式，不过他的不足就是无论在什么情况下，都会两次超类型的构造函数，一次在创建子类原型的时候，另一次在子类型构造函数内部。
+
+3.寄生组合继承
+  这是一种实现基于类型继承的最有效的方式。
+  来看代码
+HTML 代码
+
+
+
+12345678910111213141516171819
+function inheritPrototype(SubType,SuperType){
+var prototype=object(superType.prototype);
+prototype.constructor=subType;
+subType.prototype=prototype;
+}
+function SuperTYpe(name){
+this.name=name;
+ths.colors=["red","black","white"];
+}
+SuperType.prototype.sayName=function(){alert(this.name);};
+function SubType(name,age){
+SuperType.call(this,name);
+this.age=age;
+}
+inheritPrototype(SubType,SuperType);
+SubType.prototype.sayAge=function(){
+alert(this.age);
+}
+
+这段代码只调用了一次SuperType构造函数，体现出了他的高效性，也避免了在SubType.prototype上创建不必要的属性。
